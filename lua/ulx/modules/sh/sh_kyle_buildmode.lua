@@ -188,8 +188,8 @@ if SERVER then
 
 			local a
 			--run through all the constraints to find the car
-			for aa in pairs(z.Constraints) do
-				local b, c = z.Constraints[aa]:GetConstrainedEntities()
+			for _, const in pairs(z.Constraints) do
+				local b, c = z.const:GetConstrainedEntities()
 				if b ~= nil and simfphys.IsCar(b) then a = b break end
 			end
 			
@@ -197,7 +197,7 @@ if SERVER then
 			_kyle_Prop_Noclip_Sub(a)
 
 			--noclip all the wheels
-			for aa,ab in pairs(a.Wheels) do
+			for _, wheel in pairs(a.Wheels) do
 				_kyle_Prop_Noclip_Sub(ab)
 			end
 			
@@ -397,8 +397,7 @@ if SERVER then
 		
 		hook.Run ("OnPlayerSwitchModePVPBUILD", z, false)
 	end
-
-
+	
 	hook.Add("PlayerSpawnProp", "KylebuildmodePropSpawnBlock", function(y, z)
 		local adminbypass = y:IsAdmin() and _Kyle_Buildmode["adminsbypassrestrictions"]=="1"
 	
@@ -640,7 +639,7 @@ if SERVER then
 				if canDamangeNPC(y) then return end
 				return true
 			end
-	
+			
 			if z:GetAttacker().Owner and z:GetAttacker().Owner.buildmode then 
 				if canDamangeNPC(y) then return end
 				return true

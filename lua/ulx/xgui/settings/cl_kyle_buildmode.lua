@@ -11,42 +11,43 @@ local b = xlib.makepanel{ parent=xgui.null }
 local panels = {
 	{ --panel_entering
 		["panelItems"] = {
-			["spawnwithbuildmode"] = 				{0, "Players Spawn with Buildmode"},
-			["persistpvp"] = 						{0, "Force PVP on respawn if the player died with PVP"},
-			["builddelay"] = 						{1, "Buildmode Delay"}
+			["spawnwithbuildmode"] = 			{0, "Players Spawn with Buildmode"},
+			["persistpvp"] = 					{0, "Force PVP on respawn if the player died with PVP"},
+			["builddelay"] = 					{1, "Buildmode Delay"}
 		}
 	}, 
 	{ --panel_whilein
 		panelItems = {
-			["restrictweapons"] = 					{0, "Restrict weapons with 'Builder Weapons'"},
-			["restrictsents"] = 					{0, "Restrict SENTs with 'Builder SENTs'"},
-			["restrictvehicles"] = 					{0, "Restrict Vehicles with 'Builder Vehicles'"},
-			["restrictvehicleentry"] = 				{0, "Restrict Vehicle Entry with 'Builder Vehicles'"},
-			["pvppropspawn"] = 						{0, "Allow Prop Spawn in PVP"},
-			["allownoclip"] =			 			{0, "Allow Noclip in Buildmode"},
-			["allownpcdamage"] = 					{0, "Allow damaging NPCs while in Buildmode"},
-			["npcignore"] = 						{0, "NPCs ignore Builders"},
-			["restrictwantipropkilleapons"] = 		{0, "Prevent Builders from Propkilling"},
-			["highlightbuilders"] = 				{0, "Highlight Builders"},
-			["highlightpvpers"] = 					{0, "Highlight PVPers"},
-			["highlightonlywhenlooking"] = 			{0, "Highlight Only When Looking"},
-			["showtextstatus"] = 					{0, "Show Text Status"}
+			["restrictweapons"] = 				{0, "Restrict weapons with 'Builder Weapons'"},
+			["restrictsents"] = 				{0, "Restrict SENTs with 'Builder SENTs'"},
+			["restrictvehicles"] = 				{0, "Restrict Vehicles with 'Builder Vehicles'"},
+			["restrictvehicleentry"] = 			{0, "Restrict Vehicle Entry with 'Builder Vehicles'"},
+			["pvppropspawn"] = 					{0, "Allow Prop Spawn in PVP"},
+			["allownoclip"] =			 		{0, "Allow Noclip in Buildmode"},
+			["allownpcdamage"] = 				{0, "Allow damaging NPCs while in Buildmode"},
+			["npcignore"] = 					{0, "NPCs ignore Builders"},
+			["restrictwantipropkilleapons"] = 	{0, "Prevent Builders from Propkilling"},
+			["highlightbuilders"] = 			{0, "Highlight Builders"},
+			["highlightpvpers"] = 				{0, "Highlight PVPers"},
+			["highlightonlywhenlooking"] = 		{0, "Highlight Only When Looking"},
+			["showtextstatus"] = 				{0, "Show Text Status"},
+			["allowacfdamage"] = 				{0, "Allow dealing ACF damage in Buildmode"},
 		}
 	},
 	{ -- panel_exiting
 		panelItems = {
-			["returntospawn"] = 					{0, "Return Player to spawn on Buildmode exit"},
-			["pvpdelay"] = 							{1, "PVP Delay"}
+			["returntospawn"] = 				{0, "Return Player to spawn on Buildmode exit"},
+			["pvpdelay"] = 						{1, "PVP Delay"}
 		}
 	},
 	{ -- panel_extras
 		panelItems = {
-			["spawnprotection"] = 					{1, "Amount of seconds to enable Buildmode temporarily on spawn"},
-			["adminsbypassrestrictions"] = 			{0, "Admins Bypass Restrictions"},
-			["anitpropspawn"] = 					{0, "Prevent PVPers from Spawning Props"},
-			["antipropkillpvper"] = 				{0, "Prevent PVPers from Propkilling"},
-			["antipropkill"] = 						{0, "Prevent Builders from Propkilling"},
-			["antiballmunch"] = 					{0, "No more ball munching"}
+			["spawnprotection"] = 				{1, "Amount of seconds to enable Buildmode temporarily on spawn"},
+			["adminsbypassrestrictions"] = 		{0, "Admins Bypass Restrictions"},
+			["anitpropspawn"] = 				{0, "Prevent PVPers from Spawning Props"},
+			["antipropkillpvper"] = 			{0, "Prevent PVPers from Propkilling"},
+			["antipropkill"] = 					{0, "Prevent Builders from Propkilling"},
+			["antiballmunch"] = 				{0, "No more ball munching"}
 		}
 	},
 	{ -- panel_advanced
@@ -121,30 +122,30 @@ local text_vehicleenter 				= xlib.maketextbox{x=0, y=125, w=105, h=25, parent=p
 local check_vehiclelisttype 			= xlib.makecheckbox{ x=0, y=153, label="List is a Blacklist", parent=panel_buildervehicles, repconvar="rep_kylebuildmode_vehiclelistmode"}
 
 list_builderweapons:AddColumn( "Builder Weapons" )
-list_builderweapons.OnRowSelected 		= function()
-											button_addremoveweapon:SetText("-")
-											button_addremoveweapon.a = false
-											button_addremoveweapon:SetDisabled(false)
-										end
-button_addremoveweapon.DoClick 			= function()
-											if button_addremoveweapon.a then
-												RunConsoleCommand( "kylebuildmode", "addweapon",  text_weaponenter:GetValue())
-												text_weaponenter:SetValue("")
-											else
-												if list_builderweapons:GetSelected()[1]:GetColumnText(1) then
-													RunConsoleCommand("kylebuildmode", "removeweapon",  list_builderweapons:GetSelected()[1]:GetColumnText(1))
-												end
-											end
+list_builderweapons.OnRowSelected = function()
+	button_addremoveweapon:SetText("-")
+	button_addremoveweapon.a = false
+	button_addremoveweapon:SetDisabled(false)
+end
+button_addremoveweapon.DoClick = function()
+	if button_addremoveweapon.a then
+		RunConsoleCommand( "kylebuildmode", "addweapon",  text_weaponenter:GetValue())
+		text_weaponenter:SetValue("")
+	else
+		if list_builderweapons:GetSelected()[1]:GetColumnText(1) then
+			RunConsoleCommand("kylebuildmode", "removeweapon",  list_builderweapons:GetSelected()[1]:GetColumnText(1))
+		end
+	end
 
-											button_addremoveweapon:SetDisabled(true)
-										end
-text_weaponenter.OnEnter 				= function()
-											if text_weaponenter:GetValue() then
-												RunConsoleCommand("kylebuildmode", "addweapon", text_weaponenter:GetValue())
-												button_addremoveweapon:SetDisabled(true)
-											end
-										end
-text_weaponenter.OnChange 				= function()
+	button_addremoveweapon:SetDisabled(true)
+end
+text_weaponenter.OnEnter = function()
+	if text_weaponenter:GetValue() then
+		RunConsoleCommand("kylebuildmode", "addweapon", text_weaponenter:GetValue())
+		button_addremoveweapon:SetDisabled(true)
+	end
+end
+text_weaponenter.OnChange = function()
 	button_addremoveweapon:SetText("+")
 	button_addremoveweapon.a = true
 
@@ -172,13 +173,13 @@ button_addremoveentity.DoClick 			= function()
 	end
 	button_addremoveentity:SetDisabled(true)
 end
-text_entityenter.OnEnter 				= function()
+text_entityenter.OnEnter = function()
 	if text_entityenter:GetValue() then
 		RunConsoleCommand("kylebuildmode", "removeentity", text_entityenter:GetValue())
 		button_addremoveentity:SetDisabled(true)
 	end
 end
-text_entityenter.OnChange 				= function()
+text_entityenter.OnChange = function()
 	button_addremoveentity:SetText("+")
 	button_addremoveentity.a = true
 
@@ -190,12 +191,12 @@ text_entityenter.OnChange 				= function()
 end
 
 list_buildervehicles:AddColumn( "Builder Vehicles" )
-list_buildervehicles.OnRowSelected 		= function()
+list_buildervehicles.OnRowSelected = function()
 	button_addremovevehicle:SetText("-")
 	button_addremovevehicle.a = false
 	button_addremovevehicle:SetDisabled(false)
 end
-button_addremovevehicle.DoClick 		= function()
+button_addremovevehicle.DoClick = function()
 	if button_addremovevehicle.a then
 		RunConsoleCommand( "kylebuildmode", "addvehicle",  text_vehicleenter:GetValue())
 		text_vehicleenter:SetValue("")
@@ -206,13 +207,13 @@ button_addremovevehicle.DoClick 		= function()
 	end
 	button_addremovevehicle:SetDisabled(true)
 end
-text_vehicleenter.OnEnter 				= function()
+text_vehicleenter.OnEnter = function()
 	if text_vehicleenter:GetValue() then
 		RunConsoleCommand("kylebuildmode", "removevehicle", text_vehicleenter:GetValue())
 		button_addremovevehicle:SetDisabled(true)
 	end
 end
-text_vehicleenter.OnChange 				= function()
+text_vehicleenter.OnChange = function()
 	button_addremovevehicle:SetText("+")
 	button_addremovevehicle.a = true
 
@@ -223,12 +224,12 @@ text_vehicleenter.OnChange 				= function()
 	end
 end
 
-local panel_builderhalo					= xlib.makepanel{ x=5, y=0, w=130, h=150, parent=panel_advanced}
-local label_builderhalo 				= xlib.makelabel{ x=0, y=0, w=500, h=15, parent=panel_builderhalo, label="Builder Halo Color" }
-local color_builderhalo 				= xlib.makecolorpicker{ x=0, y=15, parent=panel_builderhalo }
-local panel_pvphalo 					= xlib.makepanel{ x=140, y=0, w=130, h=150, parent=panel_advanced}
-local label_pvphalo 					= xlib.makelabel{ x=0, y=0, w=500, h=15, parent=panel_pvphalo, label="PVPer Halo Color" }
-local color_pvphalo 					= xlib.makecolorpicker{ x=0, y=15, parent=panel_pvphalo }
+local panel_builderhalo	= xlib.makepanel{ x=5, y=0, w=130, h=150, parent=panel_advanced}
+local label_builderhalo = xlib.makelabel{ x=0, y=0, w=500, h=15, parent=panel_builderhalo, label="Builder Halo Color" }
+local color_builderhalo = xlib.makecolorpicker{ x=0, y=15, parent=panel_builderhalo }
+local panel_pvphalo 	= xlib.makepanel{ x=140, y=0, w=130, h=150, parent=panel_advanced}
+local label_pvphalo 	= xlib.makelabel{ x=0, y=0, w=500, h=15, parent=panel_pvphalo, label="PVPer Halo Color" }
+local color_pvphalo 	= xlib.makecolorpicker{ x=0, y=15, parent=panel_pvphalo }
 function color_builderhalo:OnChange( z )
 	z = {z["r"],z["g"],z["b"]}
 	RunConsoleCommand("kylebuildmode", "set", "highlightbuilderscolor", string.sub(table.ToString(z), 2, string.len(table.ToString(z))-2))
@@ -239,17 +240,17 @@ function color_pvphalo:OnChange( z )
 end
 
 --"Help" Panel
-local panel_help					= panels[6]["panel"]
-local label_steam					= xlib.makelabel{ x=0, y=260, w=500, h=15, parent=panel_help, label="For questions and comments, click here:" }
-local button_steam					= xlib.makebutton{x=0, y=275, w=240, h=15,  parent=panel_help, label="http://steamcommunity.com/sharedfiles/filedetails/?id=1308900979" }
-button_steam.DoClick 				= function()
-										gui.OpenURL( "http://steamcommunity.com/sharedfiles/filedetails/?id=1308900979")
-									end
-local label_github					= xlib.makelabel{ x=0, y=290, w=500, h=15, parent=panel_help, label="For information, issues, and requests click here:" }
-local button_github					= xlib.makebutton{x=0, y=305, w=240, h=15,  parent=panel_help, label="https://github.com/kythre/Buildmode-ULX" }
-button_github.DoClick 				= function()
-										gui.OpenURL( "https://github.com/kythre/Buildmode-ULX/")
-									end
+local panel_help		= panels[6]["panel"]
+local label_steam		= xlib.makelabel{ x=0, y=260, w=500, h=15, parent=panel_help, label="For questions and comments, click here:" }
+local button_steam		= xlib.makebutton{x=0, y=275, w=240, h=15,  parent=panel_help, label="http://steamcommunity.com/sharedfiles/filedetails/?id=1308900979" }
+button_steam.DoClick 	= function()
+	gui.OpenURL( "http://steamcommunity.com/sharedfiles/filedetails/?id=1308900979")
+end
+local label_github		= xlib.makelabel{ x=0, y=290, w=500, h=15, parent=panel_help, label="For information, issues, and requests click here:" }
+local button_github		= xlib.makebutton{x=0, y=305, w=240, h=15,  parent=panel_help, label="https://github.com/kythre/Buildmode-ULX" }
+button_github.DoClick 	= function()
+	gui.OpenURL( "https://github.com/kythre/Buildmode-ULX/")
+end
 
 for k in pairs(panels) do
 	panels[k]["panel"]:SetVisible(false)
