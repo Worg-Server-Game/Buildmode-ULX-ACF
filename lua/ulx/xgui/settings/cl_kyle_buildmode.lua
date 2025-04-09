@@ -31,7 +31,7 @@ local panels = {
 			["highlightpvpers"] = 				{0, "Highlight PVPers"},
 			["highlightonlywhenlooking"] = 		{0, "Highlight Only When Looking"},
 			["showtextstatus"] = 				{0, "Show Text Status"},
-			["allowacfdamage"] = 				{0, "Allow dealing ACF damage in Buildmode"},
+			["allowacfdamage"] = 				{0, "Enable ACF damage permission mode"},
 		}
 	},
 	{ -- panel_exiting

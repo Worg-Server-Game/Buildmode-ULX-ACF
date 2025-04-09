@@ -61,4 +61,15 @@ timer.Simple(10, function()
 	perms.RegisterMode(modepermission, modename, modedescription, false, nil, DefaultPermission)
 
 	print("loaded build/kill permission mode")
+	print("changing mode in 5 seconds...")
+
+	if _Kyle_Buildmode["acfdmgpermmode"] then
+		timer.Simple(5, function()
+			local oldmode = table.KeyFromValue(this.Modes, this.DamagePermission)
+			this.DefaultCanDamage = this.ModeDefaultAction[modename]
+			this.DamagePermission = this.Modes[modename]
+			print("changing mode")
+			hook.Run("ACF_OnChangeProtectionMode", modename, oldmode)
+		end)
+	end
 end)
