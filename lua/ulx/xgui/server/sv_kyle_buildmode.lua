@@ -38,6 +38,7 @@ xgui.addSVModule( "kylebuildmode_load", function()
 	_Kyle_Buildmode["buildloadout"] = {"weapon_physgun", "gmod_tool", "gmod_camera"}
 	_Kyle_Buildmode["builderentitylist"] = {}
 	_Kyle_Buildmode["buildervehiclelist"] = {}
+	_Kyle_Buildmode["acfdmgpermmode"] = 1
 	-- 0 for whitelist, 1 for blacklist
 	_Kyle_Buildmode["weaponlistmode"] = 0
 	_Kyle_Buildmode["entitylistmode"] = 1
