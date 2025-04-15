@@ -65,9 +65,9 @@ timer.Simple(10, function()
 
 	if _Kyle_Buildmode["acfdmgpermmode"] then
 		timer.Simple(5, function()
-			local oldmode = table.KeyFromValue(this.Modes, this.DamagePermission)
-			this.DefaultCanDamage = this.ModeDefaultAction[modename]
-			this.DamagePermission = this.Modes[modename]
+			local oldmode = table.KeyFromValue(ACF.Permissions.Modes, ACF.Permissions.DamagePermission)
+			ACF.Permissions.DefaultCanDamage = ACF.Permissions.ModeDefaultAction[modename]
+			ACF.Permissions.DamagePermission = ACF.Permissions.Modes[modename]
 			print("changing mode")
 			hook.Run("ACF_OnChangeProtectionMode", modename, oldmode)
 		end)

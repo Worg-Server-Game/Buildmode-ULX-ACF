@@ -31,7 +31,6 @@ if SERVER then
 		timer.Simple(0.5, function() 	
 			--Exit if the prop stops existing or isnt noclipped or has already attempted unnoclipping for too long
 			if not (z:IsValid() and z.buildnoclipped and z:GetNWInt("_kyle_unnoclip_attempt", 0) < 100) then 
-				z:SetNWInt("_kyle_unnoclip_attempt", 0)
 				return 
 			end
 			z:SetNWInt("_kyle_unnoclip_attempt", z:GetNWInt("_kyle_unnoclip_attempt", 0)+1)
@@ -761,7 +760,7 @@ hook.Add("PreDrawHalos", "KyleBuildmodehalos", function()
 	end
 	
 	-- --add setting later for render mode
-	if _Kyle_Buildmode["highlightbuilders"]=="1" then 
+	if _Kyle_Buildmode["highlightbuilders"]=="1" and not LocalPlayer().buildmode then 
 		z = string.Split( _Kyle_Buildmode["highlightbuilderscolor"],",")
 		halo.Add(w, Color(z[1],z[2],z[3]), 4, 4, 1, true)
 	end
