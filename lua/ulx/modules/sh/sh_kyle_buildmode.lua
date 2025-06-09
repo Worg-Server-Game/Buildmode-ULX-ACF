@@ -322,7 +322,7 @@ if SERVER then
 			--noclip their vehicle so they cant run anyone anyone over while in buildmode
 			if z:InVehicle() then
 				if _kyle_builder_allow_vehicle(z, z:GetVehicle()) then
-					_kyle_Prop_Noclip(z:GetVehicle())
+					--_kyle_Prop_Noclip(z:GetVehicle())
 				else
 					z:ExitVehicle()
 					z:SendLua("GAMEMODE:AddNotify(\"You cannot enter this vehicle while in Buildmode.\",NOTIFY_GENERIC, 5)")
@@ -365,9 +365,12 @@ if SERVER then
 		if z:Alive() then
 			--save their position incase they dont need to return to spawn on exit
 			local pos = z:GetPos()
+			local ang = z:EyeAngles()
 			
 			--if they are in a vehicle try to un noclip their vehicle and kick them out of it if they need to return to spawn
 			if z:InVehicle() then
+				ang = z:LocalEyeAngles()
+
 				if IsValid(z:GetVehicle()) and z:GetVehicle().buildnoclipped then
 					_kyle_Prop_TryUnNoclip(z:GetVehicle())
 				end
@@ -376,17 +379,18 @@ if SERVER then
 					z:ExitVehicle()
 				end
 			end		
-			
+
 			ULib.spawn(z, not z:GetNWBool("_Kyle_BuildmodeOnSpawn"))
-			
+	
 			if _Kyle_Buildmode["restrictweapons"]=="1" and z:GetNWBool("_Kyle_BuildmodeOnSpawn") then
 				z:ConCommand("kylebuildmode defaultloadout")
 			end		
 			
 			--ULIB.spawn moves the player to spawn, this will return the player to where they where while in buildmode
-			if _Kyle_Buildmode["returntospawn"]=="0" then
+			if not z:InVehicle() then
 				z:SetPos(pos)
 			end
+			z:SetEyeAngles(ang)
 	
 			--disable noclip if they had it in build		
 			if z:GetNWBool("kylenocliped") then
