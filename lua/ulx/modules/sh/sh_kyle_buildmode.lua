@@ -378,7 +378,7 @@ if SERVER then
 				if _Kyle_Buildmode["returntospawn"]=="1" then
 					z:ExitVehicle()
 				end
-			end		
+			end	
 
 			ULib.spawn(z, not z:GetNWBool("_Kyle_BuildmodeOnSpawn"))
 	
@@ -387,12 +387,12 @@ if SERVER then
 			end		
 			
 			--ULIB.spawn moves the player to spawn, this will return the player to where they where while in buildmode
-			if not z:InVehicle() then
+			if not z:InVehicle() then -- doing this if they're in a vehicle makes them appear somewhere completely different on the map
 				z:SetPos(pos)
 			end
 			z:SetEyeAngles(ang)
 	
-			--disable noclip if they had it in build		
+			--disable noclip if they had it in build
 			if z:GetNWBool("kylenocliped") then
 				z:ConCommand( "noclip" )
 			end
@@ -735,6 +735,14 @@ if SERVER then
 	kylebuildmodeadmin:addParam{type=ULib.cmds.BoolArg, invisible=true}
 	kylebuildmodeadmin:help("Forces Buildmode on target(s).")
 	kylebuildmodeadmin:setOpposite("ulx fpvp", {_, _, true}, "!fpvp")
+else
+	hook.Add("PlayerNoClip", "KylebuildmodeNoclip", function(y, z)	
+		if _Kyle_Buildmode["allownoclip"]=="1" and ULib.ucl.query(y, "kylebuildmodenoclip", true) then
+			--allow players to use default sandbox noclip
+			y:SetNWBool("kylenocliped", z)
+			return z == false or z == y.buildmode
+		end
+	end, HOOK_HIGH )
 end
 
 hook.Add("PreDrawHalos", "KyleBuildmodehalos", function()

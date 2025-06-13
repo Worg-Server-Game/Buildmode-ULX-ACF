@@ -31,7 +31,7 @@ local panels = {
 			["highlightpvpers"] = 				{0, "Highlight PVPers"},
 			["highlightonlywhenlooking"] = 		{0, "Highlight Only When Looking"},
 			["showtextstatus"] = 				{0, "Show Text Status"},
-			["allowacfdamage"] = 				{0, "Enable ACF damage permission mode"},
+			["acfdmgpermmode"] = 				{0, "Enable ACF damage permission mode"},
 		}
 	},
 	{ -- panel_exiting
@@ -101,25 +101,25 @@ for k, e in pairs(panels) do
 end
 
 --"Advanced Settings" Panel
-local panel_advanced					= panels[5]["panel"]
+local panel_advanced			= panels[5]["panel"]
 
-local panel_builderweapon 				= xlib.makepanel{ x=5, y=150, w=130, h=170, parent=panel_advanced}
-local list_builderweapons 				= xlib.makelistview{ x=0, y=0, w=130, h=125, parent=panel_builderweapon }
-local button_addremoveweapon 			= xlib.makebutton{x=105, y=125, w=25, h=25,  parent=panel_builderweapon, label="+", disabled=true }
-local text_weaponenter 					= xlib.maketextbox{x=0, y=125, w=105, h=25, parent=panel_builderweapon}
-local check_weaponlisttype 				= xlib.makecheckbox{ x=0, y=153, label="List is a Blacklist", parent=panel_builderweapon, repconvar="rep_kylebuildmode_weaponlistmode"}
+local panel_builderweapon 		= xlib.makepanel{ x=5, y=150, w=130, h=170, parent=panel_advanced}
+local list_builderweapons 		= xlib.makelistview{ x=0, y=0, w=130, h=125, parent=panel_builderweapon }
+local button_addremoveweapon 	= xlib.makebutton{x=105, y=125, w=25, h=25,  parent=panel_builderweapon, label="+", disabled=true }
+local text_weaponenter 			= xlib.maketextbox{x=0, y=125, w=105, h=25, parent=panel_builderweapon}
+local check_weaponlisttype 		= xlib.makecheckbox{ x=0, y=153, label="List is a Blacklist", parent=panel_builderweapon, repconvar="rep_kylebuildmode_weaponlistmode"}
 
-local panel_builderentities 			= xlib.makepanel{ x=140, y=150, w=130, h=170, parent=panel_advanced}
-local list_builderentities 				= xlib.makelistview{ x=0, y=0, w=130, h=125, parent=panel_builderentities }
-local button_addremoveentity 			= xlib.makebutton{x=105, y=125, w=25, h=25,  parent=panel_builderentities, label="+", disabled=true }
-local text_entityenter 					= xlib.maketextbox{x=0, y=125, w=105, h=25, parent=panel_builderentities}
-local check_entitylisttype 				= xlib.makecheckbox{ x=0, y=153, label="List is a Blacklist", parent=panel_builderentities, repconvar="rep_kylebuildmode_entitylistmode"}
+local panel_builderentities 	= xlib.makepanel{ x=140, y=150, w=130, h=170, parent=panel_advanced}
+local list_builderentities 		= xlib.makelistview{ x=0, y=0, w=130, h=125, parent=panel_builderentities }
+local button_addremoveentity 	= xlib.makebutton{x=105, y=125, w=25, h=25,  parent=panel_builderentities, label="+", disabled=true }
+local text_entityenter 			= xlib.maketextbox{x=0, y=125, w=105, h=25, parent=panel_builderentities}
+local check_entitylisttype 		= xlib.makecheckbox{ x=0, y=153, label="List is a Blacklist", parent=panel_builderentities, repconvar="rep_kylebuildmode_entitylistmode"}
 
-local panel_buildervehicles 			= xlib.makepanel{ x=275, y=150, w=130, h=170, parent=panel_advanced}
-local list_buildervehicles 				= xlib.makelistview{ x=0, y=0, w=130, h=125, parent=panel_buildervehicles }
-local button_addremovevehicle 			= xlib.makebutton{x=105, y=125, w=25, h=25,  parent=panel_buildervehicles, label="+", disabled=true }
-local text_vehicleenter 				= xlib.maketextbox{x=0, y=125, w=105, h=25, parent=panel_buildervehicles}
-local check_vehiclelisttype 			= xlib.makecheckbox{ x=0, y=153, label="List is a Blacklist", parent=panel_buildervehicles, repconvar="rep_kylebuildmode_vehiclelistmode"}
+local panel_buildervehicles 	= xlib.makepanel{ x=275, y=150, w=130, h=170, parent=panel_advanced}
+local list_buildervehicles 		= xlib.makelistview{ x=0, y=0, w=130, h=125, parent=panel_buildervehicles }
+local button_addremovevehicle 	= xlib.makebutton{x=105, y=125, w=25, h=25,  parent=panel_buildervehicles, label="+", disabled=true }
+local text_vehicleenter 		= xlib.maketextbox{x=0, y=125, w=105, h=25, parent=panel_buildervehicles}
+local check_vehiclelisttype 	= xlib.makecheckbox{ x=0, y=153, label="List is a Blacklist", parent=panel_buildervehicles, repconvar="rep_kylebuildmode_vehiclelistmode"}
 
 list_builderweapons:AddColumn( "Builder Weapons" )
 list_builderweapons.OnRowSelected = function()
