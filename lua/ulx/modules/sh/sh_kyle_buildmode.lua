@@ -737,10 +737,10 @@ if SERVER then
 	kylebuildmodeadmin:setOpposite("ulx fpvp", {_, _, true}, "!fpvp")
 else
 	hook.Add("PlayerNoClip", "KylebuildmodeNoclip", function(y, z)	
-		if _Kyle_Buildmode["allownoclip"]=="1" and ULib.ucl.query(y, "kylebuildmodenoclip", true) then
+		if _Kyle_Buildmode["allownoclip"]=="1" then
 			--allow players to use default sandbox noclip
 			y:SetNWBool("kylenocliped", z)
-			return z == false or z == y.buildmode
+			return z == false or z == y:GetNWBool("_Kyle_Buildmode")
 		end
 	end, HOOK_HIGH )
 end

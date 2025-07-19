@@ -19,39 +19,39 @@ xgui.addSVModule( "kylebuildmode_load", function()
 	xgui.addDataType( "_Kyle_Buildmode", function() end, "kylebuildmodesettings", 0, -10 )
 	
 	--Load defaults in to settings table
-	_Kyle_Buildmode["spawnprotection"] = 0
-	_Kyle_Buildmode["restrictweapons"] = 0
-	_Kyle_Buildmode["restrictsents"] = 0
-	_Kyle_Buildmode["restrictvehicles"] = 0
-	_Kyle_Buildmode["restrictvehicleentry"] = 0
-	_Kyle_Buildmode["allownoclip"] = 0
-	_Kyle_Buildmode["returntospawn"] = 0
-	_Kyle_Buildmode["allownpcdamage"] = 0
-	_Kyle_Buildmode["npcignore"] = 0
-	_Kyle_Buildmode["antipropkill"] = 0
-	_Kyle_Buildmode["antipropkillpvper"] = 0
-	_Kyle_Buildmode["spawnwithbuildmode"] = 1
-	_Kyle_Buildmode["persistpvp"] = 0
-	_Kyle_Buildmode["pvppropspawn"] = 1
-	_Kyle_Buildmode["highlightbuilders"] = 0
-	_Kyle_Buildmode["highlightpvpers"] = 0
-	_Kyle_Buildmode["buildloadout"] = {"weapon_physgun", "gmod_tool", "gmod_camera"}
-	_Kyle_Buildmode["builderentitylist"] = {}
-	_Kyle_Buildmode["buildervehiclelist"] = {}
-	_Kyle_Buildmode["acfdmgpermmode"] = 1
+	_Kyle_Buildmode["spawnprotection"] = 			0
+	_Kyle_Buildmode["restrictweapons"] = 			0
+	_Kyle_Buildmode["restrictsents"] = 				0
+	_Kyle_Buildmode["restrictvehicles"] =			0
+	_Kyle_Buildmode["restrictvehicleentry"] = 		0
+	_Kyle_Buildmode["allownoclip"] = 				0
+	_Kyle_Buildmode["returntospawn"] = 				0
+	_Kyle_Buildmode["allownpcdamage"] = 			0
+	_Kyle_Buildmode["npcignore"] = 					0
+	_Kyle_Buildmode["antipropkill"] = 				0
+	_Kyle_Buildmode["antipropkillpvper"] = 			0
+	_Kyle_Buildmode["spawnwithbuildmode"] = 		1
+	_Kyle_Buildmode["persistpvp"] = 				0
+	_Kyle_Buildmode["pvppropspawn"] = 				1
+	_Kyle_Buildmode["highlightbuilders"] = 			0
+	_Kyle_Buildmode["highlightpvpers"] = 			0
+	_Kyle_Buildmode["buildloadout"] = 				{"weapon_physgun", "gmod_tool", "gmod_camera"}
+	_Kyle_Buildmode["builderentitylist"] = 			{}
+	_Kyle_Buildmode["buildervehiclelist"] = 		{}
+	_Kyle_Buildmode["acfdmgpermmode"] = 			1
 	-- 0 for whitelist, 1 for blacklist
-	_Kyle_Buildmode["weaponlistmode"] = 0
-	_Kyle_Buildmode["entitylistmode"] = 1
-	_Kyle_Buildmode["vehiclelistmode"] = 1
-	_Kyle_Buildmode["highlightbuilderscolor"]= "0,128,255"
-	_Kyle_Buildmode["highlightpvperscolor"]= "255,0,0"
-	_Kyle_Buildmode["builddelay"] = 0
-	_Kyle_Buildmode["pvpdelay"] = 0
-	_Kyle_Buildmode["highlightonlywhenlooking"] = 0
-	_Kyle_Buildmode["showtextstatus"] = 1
-	_Kyle_Buildmode["adminsbypassrestrictions"] = 0
-	_Kyle_Buildmode["anitpropspawn"] = 0
-	_Kyle_Buildmode["antiballmunch"] = 1
+	_Kyle_Buildmode["weaponlistmode"] = 			0
+	_Kyle_Buildmode["entitylistmode"] = 			1
+	_Kyle_Buildmode["vehiclelistmode"] = 			1
+	_Kyle_Buildmode["highlightbuilderscolor"]= 		"0,128,255"
+	_Kyle_Buildmode["highlightpvperscolor"]= 		"255,0,0"
+	_Kyle_Buildmode["builddelay"] = 				0
+	_Kyle_Buildmode["pvpdelay"] = 					0
+	_Kyle_Buildmode["highlightonlywhenlooking"] = 	0
+	_Kyle_Buildmode["showtextstatus"] = 			1
+	_Kyle_Buildmode["adminsbypassrestrictions"] = 	0
+	_Kyle_Buildmode["anitpropspawn"] = 				0
+	_Kyle_Buildmode["antiballmunch"] = 				1
 
 
 	--Load saved settings
