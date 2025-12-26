@@ -1,4 +1,6 @@
 # Buildmode-ULX
+BASED ON KYLES BUILDMODE
+
 Hopefully prevent Builders from abusing GodMode
 
 Hopefully prevents PVPers from bothering Builders
