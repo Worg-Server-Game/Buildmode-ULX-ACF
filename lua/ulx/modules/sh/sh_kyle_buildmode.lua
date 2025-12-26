@@ -1,22 +1,3 @@
-local function entitydata(z) 
-	print("Me", z)
-	print("Owner", z:GetOwner())
-	print("Class", z:GetClass())
-	print("Model", z:GetModel())
-	print("Name", z:GetName())
-	print("MoveParent", z:GetMoveParent())
-	print("Creator", z:GetCreator())
-	print("Parent", z:GetParent())
-	print("RagdollOwner", z:GetRagdollOwner())
-	print("Children")
-	print("PhysicsObject", z:GetPhysicsObject())
-	PrintTable(z:GetChildren())
-	print("Table")
-	PrintTable(z:GetTable())
-	print("GetAttachments")
-	PrintTable(z:GetAttachments())
-	print()
-end
 
 --put this in a seperate file at some point
 if SERVER then
