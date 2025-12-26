@@ -9,4 +9,3 @@ hook.Add("EntityTakeDamage", "ACFExplosivesFix", function(target, dmg )
 
     return false
 end)
-
