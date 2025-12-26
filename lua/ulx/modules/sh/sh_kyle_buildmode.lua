@@ -505,14 +505,9 @@ if SERVER then
 		end
 	end)
 
-	hook.Add("PlayerNoClip", "KylebuildmodeNoclip", function(y, z)	
-		if _Kyle_Buildmode["allownoclip"]=="1" and ULib.ucl.query(y, "kylebuildmodenoclip", true) then
-			--allow players to use default sandbox noclip
-			y:SetNWBool("kylenocliped", z)
-			return z == false or z == y.buildmode
-		elseif _Kyle_Buildmode["allownoclip"]=="1" then 
-			y:SendLua("GAMEMODE:AddNotify(\"You do not have permission to use noclip in Buildmode\",NOTIFY_ERROR, 5)")
-		end
+	hook.Add("PlayerNoClip", "KylebuildmodeNoclip", function(y, z)
+		y:SetNWBool("kylenocliped", z)
+		return z == false or z == y.buildmode
 	end, HOOK_HIGH )
 
 	hook.Add("PlayerSpawn", "kyleBuildmodePlayerSpawn",  function(z)
