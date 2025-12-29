@@ -37,23 +37,24 @@ timer.Simple(10, function()
 			true if the entity should be damaged, false if the entity should be protected from the damage.
 	//]]
 	local function modepermission(owner, attacker, ent)
-		if IsValid(ent) then 
+		if IsValid(ent) then
 			if ent:IsPlayer() then
 				return not (attacker.buildmode or ent.buildmode)
 			elseif ent:IsNPC() then
-				return true 
+				return true
 			end
-				
+
 		end --print("is squishy")
 
-		if not (owner.SteamID or attacker.SteamID) then
-			--print("ACF ERROR: owner or attacker is not a player!", tostring(owner), tostring(attacker), "\n", debug.traceback())
-			return DefaultPermission
+		if not attacker.SteamID then
+			if owner.SteamID and attacker:IsNPC() then
+				return owner.buildmode
+			end
+		elseif not owner.SteamID then
+			if attacker.SteamID and owner:IsNPC() then
+				return attacker.buildmode
+			end
 		end
-
-		local ownerid = owner:SteamID()
-		local attackerid = attacker:SteamID()
-		local ownerperms = perms.GetDamagePermissions(ownerid)
 
 		return not (attacker.buildmode or owner.buildmode)
 	end
