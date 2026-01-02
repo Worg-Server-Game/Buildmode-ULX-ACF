@@ -567,7 +567,7 @@ if SERVER then
 	end)
 
 	local function canDamangeNPC(z)
-		return (z:IsNPC() or z:IsNextBot()) and  _Kyle_Buildmode["allownpcdamage"]=="1" 
+		return (z:IsNPC() or z:IsNextBot())
 	end
 
 	hook.Add("EntityTakeDamage", "kyleBuildmodeTryTakeDamage", function(y, z)
