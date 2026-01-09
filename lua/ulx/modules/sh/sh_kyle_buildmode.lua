@@ -1,7 +1,7 @@
 
 --put this in a seperate file at some point
 if SERVER then
-	local function _kyle_Prop_TryUnNoclip(z)	
+	local function _kyle_Prop_TryUnNoclip(z)
 		-- simple gross fix for the collision group not staying noclipped for whatever reason
 		-- if it needs to be unnoclipped it should be noclipped in the first place right?
 		-- props are still collidable right after spawn for some reason
@@ -9,45 +9,45 @@ if SERVER then
 		-- added for when this is called when the vehicle isnt actually noclipped but this is called anyway causing the object to be noclipped forever  ?
 		z.buildnoclipped = true
 
-		timer.Simple(0.5, function() 	
+		timer.Simple(0.5, function()
 			--Exit if the prop stops existing or isnt noclipped or has already attempted unnoclipping for too long
-			if not (z:IsValid() and z.buildnoclipped and z:GetNWInt("_kyle_unnoclip_attempt", 0) < 100) then 
-				return 
+			if not (z:IsValid() and z.buildnoclipped and z:GetNWInt("_kyle_unnoclip_attempt", 0) < 100) then
+				return
 			end
-			z:SetNWInt("_kyle_unnoclip_attempt", z:GetNWInt("_kyle_unnoclip_attempt", 0)+1)
-			
+			z:SetNWInt("_kyle_unnoclip_attempt", z:GetNWInt("_kyle_unnoclip_attempt", 0) + 1)
+
 			local d = false
 			local reason = ""
 			local preventUnNoclip = {}
-	
-			preventUnNoclip["DriverInBuildmode"] = z:IsVehicle() and z:GetDriver().buildmode 
+
+			preventUnNoclip["DriverInBuildmode"] = z:IsVehicle() and z:GetDriver().buildmode
 			preventUnNoclip["MovingTooQuickly"] = z:GetVelocity():Length() > 2
 			preventUnNoclip["Physgunned"] = z:GetNWBool("Physgunned")
 			preventUnNoclip["BuildparentNoclipped"] = IsValid(z.buildparent) and z.buildparent.buildnoclipped
 			preventUnNoclip["SCarParentNoclipped"] = IsValid(z.SCarOwner) and z.SCarOwner:GetNWBool("Physgunned")
-			
+
 			for i, bool in pairs(preventUnNoclip) do
 				d = d or bool
 				if bool then
 					reason = reason .. i .. ";"
 				end
 			end
-	
+
 			--enttiy interference 
 			if not d then
 				--Check to see if there is anything inside the props bounds
 				local a,b = z:GetCollisionBounds()
 				local c = ents.FindInBox(z:LocalToWorld(a), z:LocalToWorld(b))
-				for aa,ab in pairs(c) do
+				for aa, ab in pairs(c) do
 					--if e then ignore this blocking entity
 					local e = false
-	
+
 					if z == ab	then
 						e = true
 					end
-	
+
 					local ignoreCheck = {}
-	
+
 					ignoreCheck["IsntSolid"] = not ab:IsSolid()
 					ignoreCheck["IsParentCheckChildParent"] = z:GetParent() == ab
 					ignoreCheck["IsParentCheckChildOwner"] = z:GetOwner() == ab
@@ -60,7 +60,7 @@ if SERVER then
 					--SCars Support
 					--check to see if we are the parent of the blocking prop
 					ignoreCheck["IsSCarChild"] = z == ab:GetParent().SCarOwner
-	
+
 					if CPPI then
 				--		ignoreCheck["CommonCPPIOwner"] = z:CPPIGetOwner() == ab:CPPIGetOwner() and ab:GetClass() == "prop_physics"
 				--		ignoreCheck["CommonBuildOwner"] = z.buildOwner == ab.buildOwner and ab:GetClass() == "prop_physics"
@@ -80,11 +80,11 @@ if SERVER then
 						--if the blocking entity's parent is a simfphys car and we are a wheel from that car
 						ignoreCheck["IsCarPartWhileSimfphysWheel"] = simfphys.IsCar(ab:GetParent()) and table.HasValue(ab:GetParent().Wheels, z)
 					end
-					
+
 					for i, bool in pairs(ignoreCheck) do
 						e = e or bool
 					end
-	
+
 					--check to see if the we have any constraints on the blocking entity
 					--check e to avoid any unnecessary overhead
 					if not e and z.Constraints then
@@ -98,8 +98,8 @@ if SERVER then
 							end
 						end
 					end
-					
-					if not e then 
+
+					if not e then
 						reason = reason .. ab:GetClass() .. " entity interference;"
 						d = true
 						--print()
@@ -114,9 +114,9 @@ if SERVER then
 					--	print(ab)
 					--	PrintTable(ignoreCheck)
 					end
-				end	
+				end
 			end
-			
+
 			--finally un noclip or try again
 			if not d then
 				--Recall the old attributes
@@ -137,7 +137,7 @@ if SERVER then
 
 	local function _kyle_Prop_Noclip_Sub(z)
 		if not IsEntity(z) or z.buildnoclipped then print("kyle buildmode wtf") return end
-		
+
 		--Store the old attributes (to be recalled later)
 		z:SetNWInt("RenderMode", z:GetRenderMode())
 		z:SetNWInt("Alpha", z:GetColor()["a"])
@@ -156,13 +156,13 @@ if SERVER then
 
 	local function _kyle_Prop_Noclip(z)
 		if (not IsEntity(z)) or z.buildnoclipped then return end
-		
+
 		_kyle_Prop_Noclip_Sub(z)
-	
+
 		if IsValid(z:GetParent()) then
 			_kyle_Prop_Noclip(z:GetParent())
 		end
-	
+
 		--simfphys
 		if simfphys and simfphys.IsCar and z:GetClass() == "gmod_sent_vehicle_fphysics_wheel" then
 
@@ -172,7 +172,7 @@ if SERVER then
 				local b, c = z.const:GetConstrainedEntities()
 				if b ~= nil and simfphys.IsCar(b) then a = b break end
 			end
-			
+
 			--noclip the car
 			_kyle_Prop_Noclip_Sub(a)
 
@@ -180,17 +180,17 @@ if SERVER then
 			for _, wheel in pairs(a.Wheels) do
 				_kyle_Prop_Noclip_Sub(ab)
 			end
-			
+
 			return
-		end	
-	
+		end
+
 		--noclip constrained props
 		if z.Constraints then
 			for aa, ab in pairs(z.Constraints) do
 				if IsValid(ab) then
 					local a, b = ab:GetConstrainedEntities()	
 					local c
-					
+
 					--if the consraint isnt just an entity to itself
 					--set c to the entity that isnt z
 					if a ~= b then
@@ -200,20 +200,20 @@ if SERVER then
 					-- if IsValid(z.buildparent) then
 						-- print(z, z.buildparent, c)
 					-- end
-					
+
 					--if we found a valid entity constrained to z
-					if c and (not c:GetNWBool("Physgunned")) and (not IsValid(c.buildparent)) and not (z.buildparent == c)  then
+					if c and (not c:GetNWBool("Physgunned")) and (not IsValid(c.buildparent)) and z.buildparent ~= c  then
 						c.buildparent = z
 						_kyle_Prop_Noclip(c) 
 					end
 				end
-			end	
+			end
 		end
 	end
 
 	local function hasValue (tbl, value)
 		if table.HasValue(tbl, value) then return true end
-	
+
 		for k,v in pairs(tbl) do
 			if string.find(v, "*") then
 				if string.match(value, "^(" .. string.sub(v, 1, -2) .. ")" ) then
@@ -221,13 +221,13 @@ if SERVER then
 				end
 			end
 		end
-	
+
 		return false
 	end
 
 	local function _kyle_builder_spawn_weapon(y, z)
 		local restrictweapons = _Kyle_Buildmode["restrictweapons"]=="1" and y.buildmode
-	
+
 		if restrictweapons then 
 			local restrictionmet = (_Kyle_Buildmode["weaponlistmode"]=="0") == hasValue(_Kyle_Buildmode["buildloadout"], z)
 			local adminbypass = y:IsAdmin() and _Kyle_Buildmode["adminsbypassrestrictions"]=="1"
@@ -239,14 +239,14 @@ if SERVER then
 
 	local function _kyle_builder_spawn_entity(y, z)
 		local restrictsents = _Kyle_Buildmode["restrictsents"]=="1" and y.buildmode
-		
-		if restrictsents then 
+
+		if restrictsents then
 			local restrictionmet = (_Kyle_Buildmode["entitylistmode"]=="0") == hasValue(_Kyle_Buildmode["builderentitylist"], z)
 			local adminbypass = y:IsAdmin() and _Kyle_Buildmode["adminsbypassrestrictions"]=="1"
 			return restrictionmet or adminbypass
 		else
 			return true
-		end 
+		end
 	end
 
 	local function _kyle_builder_allow_vehicle(y, z)
@@ -255,23 +255,23 @@ if SERVER then
 				if simfphys and simfphys.IsCar and z:GetTable()["base"] and simfphys.IsCar(z:GetTable()["base"]) then
 					z = z:GetTable()["base"]
 				end
-	
+
 				if IsValid(z:GetParent()) then
 					z = z:GetParent()
 				end
-	
+
 				if IsValid(z:GetTable()["EntOwner"]) then
 					z = z:GetTable()["EntOwner"]
 				end
-	
+
 				if IsEntity(z) and z:GetTable()["VehicleName"] then
 					z = z:GetTable()["VehicleName"]
 				end
-	
+
 				if IsEntity(z) and z:GetClass() then
 					z = z:GetClass()
 				end
-	
+
 				-- ignore wac for now because theyre sents and not vehicles
 				if string.StartWith(z, "wac") then
 					return true
@@ -345,7 +345,7 @@ if SERVER then
 
 	hook.Add("PlayerSpawnProp", "KylebuildmodePropSpawnBlock", function(y, z)
 		local adminbypass = y:IsAdmin() and _Kyle_Buildmode["adminsbypassrestrictions"]=="1"
-	
+
 		if _Kyle_Buildmode["anitpropspawn"] == "1" and (not y.buildmode) and (not adminbypass) then
 			y:SendLua("GAMEMODE:AddNotify(\"You can only spawn props in Buildmode\",NOTIFY_ERROR, 5)")
 			return false
@@ -356,11 +356,11 @@ if SERVER then
 		if not CPPI then 
 			z.buildOwner = x
 		end
-	
+
 		if x.buildmode and _Kyle_Buildmode["antipropkill"]=="1" then
 			_kyle_Prop_Noclip(z)
 		end
-		
+
 		if not x.buildmode and _Kyle_Buildmode["antipropkillpvper"]=="1" then
 			_kyle_Prop_Noclip(z)
 		end
@@ -368,16 +368,15 @@ if SERVER then
 
 	hook.Add("PlayerSpawnedSENT", "KylebuildmodePropKillSENT", function(y, z)
 		if CLIENT then return end
-	
-	
+
 		if not CPPI then 
 			z.buildOwner = y
 		end
-	
+
 		if y.buildmode and _Kyle_Buildmode["antipropkill"]=="1" then
 			_kyle_Prop_Noclip(z)
 		end
-		
+
 		if not y.buildmode and _Kyle_Buildmode["antipropkillpvper"]=="1" then
 			_kyle_Prop_Noclip(z)
 		end
@@ -387,11 +386,11 @@ if SERVER then
 		if not CPPI then 
 			z.buildOwner = x
 		end
-		
+
 		if y.buildmode and _Kyle_Buildmode["antipropkill"]=="1" then
 			_kyle_Prop_Noclip(z)
 		end
-		
+
 		if not y.buildmode and _Kyle_Buildmode["antipropkillpvper"]=="1" then
 			_kyle_Prop_Noclip(z)
 		end
@@ -401,7 +400,7 @@ if SERVER then
 		if y.buildmode and _Kyle_Buildmode["antipropkill"]=="1" then
 			_kyle_Prop_Noclip(z)
 		end
-		
+
 		if not y.buildmode and _Kyle_Buildmode["antipropkillpvper"]=="1" then
 		--	_kyle_Prop_Noclip(z)
 		end
@@ -418,30 +417,30 @@ if SERVER then
 			z:SetNWBool("Physgunned", true)
 			_kyle_Prop_Noclip(z)
 		end
-		
+
 		if IsValid(z) and not z:IsPlayer() and not y.buildmode and _Kyle_Buildmode["antipropkillpvper"]=="1" then 
 			z:SetNWBool("Physgunned", true)
 			_kyle_Prop_Noclip(z)
 		end
-		
+
 		--entitydata(z) 
 	end, HOOK_MONITOR_LOW )
 
 	hook.Add("PhysgunDrop", "KylebuildmodePropKill", function(y, z)	
 		if IsValid(z) and (not z:IsPlayer()) and y.buildmode and _Kyle_Buildmode["antipropkill"]=="1" then 
 			z:SetNWBool("Physgunned", false)
-			
+
 			--Kill the prop's velocity so it can not be thrown
 			z:SetPos(z:GetPos())
 		end
-		
+
 		if IsValid(z) and (not z:IsPlayer()) and not y.buildmode and _Kyle_Buildmode["antipropkillpvper"]=="1" then
 			z:SetNWBool("Physgunned", false)
-			
+
 			--Kill the prop's velocity so it can not be thrown
 			z:SetPos(z:GetPos())
 		end
-		
+
 		if IsValid(z) and (not z:IsPlayer()) and z.buildnoclipped then	
 			_kyle_Prop_TryUnNoclip(z)
 		end
@@ -454,16 +453,16 @@ if SERVER then
 
 	hook.Add("PlayerSpawn", "kyleBuildmodePlayerSpawn",  function(z)
 		--z:GetNWBool("_kyle_died") makes sure that the player is spawning after an actual death and not the ulib respawn function
-		if ((_Kyle_Buildmode["spawnwithbuildmode"]=="1" and _Kyle_Buildmode["persistpvp"]=="0") or z:GetNWBool("_Kyle_Buildmode")) and z:GetNWBool("_kyle_died") then
+		if ((_Kyle_Buildmode["spawnwithbuildmode"] == "1" and _Kyle_Buildmode["persistpvp"] == "0") or z:GetNWBool("_Kyle_Buildmode")) and z:GetNWBool("_kyle_died") then
 			_kyle_Buildmode_Enable(z)
 		elseif (not z:GetNWBool("_Kyle_Buildmode")) and z:GetNWBool("_kyle_died") then
-			if tonumber(_Kyle_Buildmode["spawnprotection"])>0 then
-				z:SendLua("GAMEMODE:AddNotify(\"".._Kyle_Buildmode["spawnprotection"].." seconds of Spawn Protection enabled. Type !pvp to disable\",NOTIFY_GENERIC, 5)")
+			if tonumber(_Kyle_Buildmode["spawnprotection"]) > 0 then
+				z:SendLua("GAMEMODE:AddNotify(\"" .. _Kyle_Buildmode["spawnprotection"] .. " seconds of Spawn Protection enabled. Type !pvp to disable\",NOTIFY_GENERIC, 5)")
 				z.buildmode = true
 				z:SetNWBool("_Kyle_Buildmode", true)
 				local timername = "_Kyle_Buildmode_spawnprotection_" .. z:GetName()
 				if timer.Exists(timername) then
-					timer.Destroy(timername)
+					timer.Remove(timername)
 				end
 				timer.Create(timername, _Kyle_Buildmode["spawnprotection"], 1, function()
 					z:SetNWBool("_Kyle_Buildmode", false)
@@ -476,7 +475,7 @@ if SERVER then
 			end
 		end
 		z:SetNWBool("_kyle_died", false)
-		
+
 		-- set z.buildmode to false if its nil. otherwise keep it at z.buildmode
 		z.buildmode = z.buildmode or false;	
 	end )
@@ -494,7 +493,7 @@ if SERVER then
 		if timer.Exists(timername) then
 			z:SetNWBool("_Kyle_Buildmode", false)
 			z.buildmode = false
-			timer.Destroy(timername)
+			timer.Remove(timername)
 		end
 	end, HOOK_HIGH )
 
@@ -516,7 +515,7 @@ if SERVER then
 
 	hook.Add("PlayerCanPickupWeapon", "kylebuildmoderestrictswep", function(y, z)
 			if not _kyle_builder_spawn_weapon(y, string.Split(string.Split(tostring(z),"][", true)[2],"]", true)[1]) then
-				return false   
+				return false
 			end
 	end)
 
@@ -533,7 +532,7 @@ if SERVER then
 			--some say that sendlua is lazy and wrong but idc
 			y:SendLua("GAMEMODE:AddNotify(\"You cannot enter this vehicle while in Buildmode.\",NOTIFY_GENERIC, 5)")
 			return false
-		end 
+		end
 	end)
 
 	hook.Add("PlayerSpawnSENT", "kylebuildmoderestrictsent", function(y, z)
@@ -567,47 +566,18 @@ if SERVER then
 	end)
 
 	local function canDamangeNPC(z)
-		return (z:IsNPC() or z:IsNextBot())
+		return z:IsNPC() or z:IsNextBot()
 	end
 
 	hook.Add("EntityTakeDamage", "kyleBuildmodeTryTakeDamage", function(y, z)
 		if y.buildmode then return true end
-		if y.buildnoclipped then return true end
+		if z:GetAttacker():IsPlayer() and z:GetAttacker().buildmode then return true end
 
-		if IsValid(z:GetAttacker()) then
-			if z:GetAttacker():IsPlayer() and z:GetAttacker().buildmode then
-				if canDamangeNPC(y) then return end
-				return true
-			end
-			
-			if z:GetAttacker().Owner and z:GetAttacker().Owner.buildmode then 
-				if canDamangeNPC(y) then return end
-				return true
-			end
-			
-			if simfphys and simfphys.IsCar and simfphys.IsCar(z:GetAttacker()) and z:GetAttacker():GetDriver().buildmode or z:GetAttacker().buildnoclipped then
-				if canDamangeNPC(y) then return end
-				return true
-			end
-			
-			if z:GetAttacker().buildnoclipped then
-				if canDamangeNPC(y) then return end
-				return true
-			end
-		end
-		
-		if IsValid(z:GetInflictor()) then
-			if z:GetInflictor().Owner and z:GetInflictor().Owner.buildmode then 
-				if canDamangeNPC(y) then return end
-				return true
-			end
-		end
-		
 		if y:IsPlayer() then
-			local adminbypass = y:IsAdmin() and _Kyle_Buildmode["adminsbypassrestrictions"]=="1"
+			local adminbypass = y:IsAdmin() and _Kyle_Buildmode["adminsbypassrestrictions"] == "1"
 
 			if (not adminbypass and (y:Health() > y:GetMaxHealth())) then
-				z:AddDamage(2*(y:Health()-y:GetMaxHealth()))
+				z:AddDamage(2 * (y:Health() - y:GetMaxHealth()))
 			end
 		end
 	end, HOOK_HIGH)
@@ -622,7 +592,7 @@ if SERVER then
 		end
 	end, "!build")
 	kylebuildmode:defaultAccess(ULib.ACCESS_ALL)
-	kylebuildmode:addParam{type=ULib.cmds.BoolArg, invisible=true}
+	kylebuildmode:addParam{type = ULib.cmds.BoolArg, invisible = true}
 	kylebuildmode:help("Grants Buildmode to self.")
 	kylebuildmode:setOpposite("ulx pvp", {_, true}, "!pvp")
 
@@ -643,14 +613,32 @@ if SERVER then
 			ulx.fancyLogAdmin(calling_ply, "#A granted Buildmode upon #T", affected_plys)
 		end
 	end, "!fbuild" )
-	kylebuildmodeadmin:addParam{type=ULib.cmds.PlayersArg}
+	kylebuildmodeadmin:addParam{type = ULib.cmds.PlayersArg}
 	kylebuildmodeadmin:defaultAccess(ULib.ACCESS_OPERATOR)
-	kylebuildmodeadmin:addParam{type=ULib.cmds.BoolArg, invisible=true}
+	kylebuildmodeadmin:addParam{type = ULib.cmds.BoolArg, invisible = true}
 	kylebuildmodeadmin:help("Forces Buildmode on target(s).")
 	kylebuildmodeadmin:setOpposite("ulx fpvp", {_, _, true}, "!fpvp")
+
+	local kylebuildmodeadmin = ulx.command("_Kyle_1", "ulx ignorebuild", function( calling_ply, should_revoke)
+		if not should_revoke and calling_ply.ignorebuild then
+			should_revoke = true
+		end
+
+		calling_ply.ignorebuild = not should_revoke
+
+		if should_revoke then
+			calling_ply:SendLua("now ignoring buildmode on players")
+		else
+			calling_ply:SendLua("no longer ignoring buildmode on players")
+		end
+	end, "!fbuild" )
+	kylebuildmodeadmin:defaultAccess(ULib.ACCESS_OPERATOR)
+	kylebuildmodeadmin:addParam{type = ULib.cmds.BoolArg, invisible = true}
+	kylebuildmodeadmin:help("Ignore buildmode when trying to damage others")
+	kylebuildmodeadmin:setOpposite("ulx unignorebuild", {_, true}, "!unignorebuild")
 else
 	hook.Add("PlayerNoClip", "KylebuildmodeNoclip", function(y, z)
-		if _Kyle_Buildmode["allownoclip"]=="1" then
+		if _Kyle_Buildmode["allownoclip"] == "1" then
 			--allow players to use default sandbox noclip
 			y:SetNWBool("kylenocliped", z)
 			return z == false or z == y:GetNWBool("_Kyle_Buildmode")
@@ -661,19 +649,19 @@ end
 hook.Add("PreDrawHalos", "KyleBuildmodehalos", function()
 	local w = {}
 	local x = {}
-	
-	if _Kyle_Buildmode["highlightonlywhenlooking"]=="0" then
+
+	if _Kyle_Buildmode["highlightonlywhenlooking"] == "0" then
 		local z = {}
 		for y,z in pairs(player.GetAll()) do
-			if z:Alive() and z:GetRenderMode() != RENDERMODE_TRANSALPHA  then
-				if z:GetNWBool("_Kyle_Buildmode")then
+			if z:Alive() and z:GetRenderMode() != RENDERMODE_TRANSALPHA then
+				if z:GetNWBool("_Kyle_Buildmode") then
 					table.insert(w, z)
 				else
 					table.insert(x, z)
 				end
 			end
 		end
-	else	
+	else
 		local z = LocalPlayer():GetEyeTrace().Entity
 		if z:IsPlayer() and z:Alive() and z:GetRenderMode() != RENDERMODE_TRANSALPHA then
 			if z:GetNWBool("_Kyle_Buildmode") then
@@ -681,42 +669,42 @@ hook.Add("PreDrawHalos", "KyleBuildmodehalos", function()
 			else
 				table.insert(x, z)
 			end
-		end		
+		end
 	end
-	
+
 	-- --add setting later for render mode
-	if _Kyle_Buildmode["highlightbuilders"]=="1" and not LocalPlayer().buildmode then 
+	if _Kyle_Buildmode["highlightbuilders"] == "1" and not LocalPlayer().buildmode then
 		z = string.Split( _Kyle_Buildmode["highlightbuilderscolor"],",")
 		halo.Add(w, Color(z[1],z[2],z[3]), 4, 4, 1, true)
 	end
-	
-	if _Kyle_Buildmode["highlightpvpers"]=="1" then 
+
+	if _Kyle_Buildmode["highlightpvpers"] == "1" then
 		z = string.Split( _Kyle_Buildmode["highlightpvperscolor"],",")
-		halo.Add(x, Color(z[1],z[2],z[3]), 4, 4, 1, true) 
-	end	
+		halo.Add(x, Color(z[1],z[2],z[3]), 4, 4, 1, true)
+	end
 end)
 
 hook.Add("HUDPaint", "KyleBuildehudpaint", function()
-	if _Kyle_Buildmode["showtextstatus"]=="1" then
+	if _Kyle_Buildmode["showtextstatus"] == "1" then
 		local z = LocalPlayer():GetEyeTrace().Entity
 		if z:IsValid() and z:IsPlayer() and z:Alive() and z:GetRenderMode() != RENDERMODE_TRANSALPHA then
-		
+
 			local x,y = gui.MousePos()
-			y=y+ScrH()*0.07414
-		
-			if x==0 or y==0 then	
-				x = ScrW()/2
-				y = ScrH()/1.74
+			y = y + ScrH() * 0.07414
+
+			if x == 0 or y == 0 then
+				x = ScrW() / 2
+				y = ScrH() / 1.74
 			end
 
-			local col = string.Split(_Kyle_Buildmode["highlightpvperscolor"],",")	
+			local col = string.Split(_Kyle_Buildmode["highlightpvperscolor"],",")
 			local mode = "PVP"
 			if z:GetNWBool("_Kyle_Buildmode") then
 				mode = "Build"
 				col = string.Split( _Kyle_Buildmode["highlightbuilderscolor"],",")
 			end
-			
-			draw.TextShadow( {text=mode.."er", font="TargetID", pos={x,y}, xalign=TEXT_ALIGN_CENTER, yalign=TEXT_ALIGN_CENTER, color=team.GetColor(z:Team())}, 1 )
+
+			draw.TextShadow( {text = mode.."er", font = "TargetID", pos = {x,y}, xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = team.GetColor(z:Team())}, 1 )
 		end
 	end
 end)
