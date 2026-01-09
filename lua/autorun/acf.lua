@@ -46,15 +46,7 @@ timer.Simple(10, function()
 
 		end --print("is squishy")
 
-		if not attacker.SteamID then
-			if owner.SteamID and attacker:IsNPC() then
-				return owner.buildmode
-			end
-		elseif not owner.SteamID then
-			if attacker.SteamID and owner:IsNPC() then
-				return attacker.buildmode
-			end
-		end
+		
 
 		return not (attacker.buildmode or owner.buildmode)
 	end
