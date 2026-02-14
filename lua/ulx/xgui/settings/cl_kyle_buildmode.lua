@@ -52,12 +52,12 @@ local panels = {
 	},
 	{ -- panel_advanced
 		{
-		
+
 		}
 	},
 	{ -- panel_help 
 		{
-		
+
 		}
 	}
 }

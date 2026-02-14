@@ -12,7 +12,7 @@ timer.Simple(10, function()
 	local modename = "buildkill"
 
 	while (not ACF or not ACF.Permissions or not ACF.Permissions.RegisterMode) and continueWait do
-		
+
 	end
 
 	if not ACF or not ACF.Permissions or not ACF.Permissions.RegisterMode then
@@ -37,18 +37,18 @@ timer.Simple(10, function()
 			true if the entity should be damaged, false if the entity should be protected from the damage.
 	//]]
 	local function modepermission(owner, attacker, ent)
-		if IsValid(ent) then
-			if ent:IsPlayer() then
-				return not (attacker.buildmode or ent.buildmode)
-			elseif ent:IsNPC() then
-				return true
-			end
+		if not IsValid(ent) then
+			return false
+		end
 
-		end --print("is squishy")
+		if ent:IsNPC() and not attacker.buildmode then return true end -- can always damage NPC
+		if attacker.buildmode or owner.buildmode then return false end -- no buildmode damage
 
-		
+		if attacker.worgBaseController and attacker.worgBaseController.DisableACF then return false end -- check if anyone is inside a no ACF area
+		if    owner.worgBaseController and    owner.worgBaseController.DisableACF then return false end -- check if anyone is inside a no ACF area
+		if      ent.worgBaseController and      ent.worgBaseController.DisableACF then return false end -- check if anyone is inside a no ACF area
 
-		return not (attacker.buildmode or owner.buildmode)
+		return true
 	end
 
 	perms.RegisterMode(modepermission, modename, modedescription, false, nil, DefaultPermission)

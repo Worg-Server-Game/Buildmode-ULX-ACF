@@ -17,7 +17,7 @@ end
 
 xgui.addSVModule( "kylebuildmode_load", function()	
 	xgui.addDataType( "_Kyle_Buildmode", function() end, "kylebuildmodesettings", 0, -10 )
-	
+
 	--Load defaults in to settings table
 	_Kyle_Buildmode["spawnprotection"] = 			0
 	_Kyle_Buildmode["restrictweapons"] = 			0
@@ -59,18 +59,18 @@ xgui.addSVModule( "kylebuildmode_load", function()
 	if file.Exists( "kylebuildmode.txt", "DATA" ) then
 		saved = ULib.parseKeyValues(file.Read( "kylebuildmode.txt" ))
 	end
-		
+
 	--Make sure all of the saved settings overwrite the default settings
 	for a,b in pairs(saved) do
 		_Kyle_Buildmode[a] = saved[a]
 	end
-	
+
 	for a,b in pairs(_Kyle_Buildmode) do
 		if type(tonumber(b)) == "number" then
-			ULib.replicatedWritableCvar("kylebuildmode_"..a, "rep_kylebuildmode_"..a, b, false,true,"kylebuildmodesettings")
+			ULib.replicatedWritableCvar("kylebuildmode_" .. a, "rep_kylebuildmode_" .. a, b, false,true,"kylebuildmodesettings")
 		end
 	end
-	
+
 	SaveAndSend()
 end )
 
@@ -83,7 +83,7 @@ hook.Add("ULibReplicatedCvarChanged", "kylebuildmodecvar",  function(v,w,x,y,z)
 end)
 
 hook.Add("PlayerInitialSpawn", "kylebuildmode_initialspawn", function(z)
-	timer.Simple( 10, function() 	
+	timer.Simple( 10, function()
 		net.Start("kylebuildmode_senddata", false)
 		net.WriteTable(_Kyle_Buildmode)
 		net.Send(z)
@@ -91,11 +91,11 @@ hook.Add("PlayerInitialSpawn", "kylebuildmode_initialspawn", function(z)
 end )
 
 concommand.Add("kylebuildmode", function( x, y, z )
-	if x:IsValid() and z[1]=="defaultloadout" then
+	if x:IsValid() and z[1] == "defaultloadout" then
 		gamemode.Call("PlayerLoadout", x)
 		return
 	end
-		
+
 	if (x:IsValid() and x:query( "kylebuildmodesettings" )) then
 		if z[1]=="addweapon" then
 			table.insert(_Kyle_Buildmode["buildloadout"], z[2])

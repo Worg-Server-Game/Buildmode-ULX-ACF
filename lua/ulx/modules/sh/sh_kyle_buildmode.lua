@@ -141,7 +141,7 @@ if SERVER then
 		--Store the old attributes (to be recalled later)
 		z:SetNWInt("RenderMode", z:GetRenderMode())
 		z:SetNWInt("Alpha", z:GetColor()["a"])
-		z:SetNWInt("CollisionGroup", z:GetCollisionGroup())			
+		z:SetNWInt("CollisionGroup", z:GetCollisionGroup())
 		--Set the new attributes
 		z:SetCollisionGroup(COLLISION_GROUP_WORLD)
 		z:SetRenderMode(1)
@@ -441,14 +441,14 @@ if SERVER then
 			z:SetPos(z:GetPos())
 		end
 
-		if IsValid(z) and (not z:IsPlayer()) and z.buildnoclipped then	
+		if IsValid(z) and (not z:IsPlayer()) and z.buildnoclipped then
 			_kyle_Prop_TryUnNoclip(z)
 		end
 	end)
 
 	hook.Add("PlayerNoClip", "KylebuildmodeNoclip", function(y, z)
 		y:SetNWBool("kylenocliped", z)
-		return z == false or z == y.buildmode
+		return z == false or z == y.buildmode and (not y.worgBaseController or not y.worgBaseController.DisableNoclip )
 	end, HOOK_HIGH )
 
 	hook.Add("PlayerSpawn", "kyleBuildmodePlayerSpawn",  function(z)
@@ -477,7 +477,7 @@ if SERVER then
 		z:SetNWBool("_kyle_died", false)
 
 		-- set z.buildmode to false if its nil. otherwise keep it at z.buildmode
-		z.buildmode = z.buildmode or false;	
+		z.buildmode = z.buildmode or false;
 	end )
 
 	hook.Add("PlayerInitialSpawn", "kyleBuildmodePlayerInitialSpawn", function (z) 
@@ -641,7 +641,7 @@ else
 		if _Kyle_Buildmode["allownoclip"] == "1" then
 			--allow players to use default sandbox noclip
 			y:SetNWBool("kylenocliped", z)
-			return z == false or z == y:GetNWBool("_Kyle_Buildmode")
+			return z == false or z == y:GetNWBool("_Kyle_Buildmode") and (not y.worgBaseController or not y.worgBaseController.DisableNoclip)
 		end
 	end, HOOK_HIGH )
 end
